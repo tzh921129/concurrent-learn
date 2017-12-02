@@ -1,6 +1,6 @@
 package net.jcip.examples;
 
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * PuzzleSolver
@@ -9,13 +9,14 @@ import java.util.concurrent.atomic.*;
  *
  * @author Brian Goetz and Tim Peierls
  */
-public class PuzzleSolver <P,M> extends ConcurrentPuzzleSolver<P, M> {
+public class PuzzleSolver<P, M> extends ConcurrentPuzzleSolver<P, M> {
     PuzzleSolver(Puzzle<P, M> puzzle) {
         super(puzzle);
     }
 
     private final AtomicInteger taskCount = new AtomicInteger(0);
 
+    @Override
     protected Runnable newTask(P p, M m, PuzzleNode<P, M> n) {
         return new CountingSolverTask(p, m, n);
     }
@@ -26,12 +27,14 @@ public class PuzzleSolver <P,M> extends ConcurrentPuzzleSolver<P, M> {
             taskCount.incrementAndGet();
         }
 
+        @Override
         public void run() {
             try {
                 super.run();
             } finally {
-                if (taskCount.decrementAndGet() == 0)
+                if (taskCount.decrementAndGet() == 0) {
                     solution.setValue(null);
+                }
             }
         }
     }

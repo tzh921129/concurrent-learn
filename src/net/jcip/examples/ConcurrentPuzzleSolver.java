@@ -1,6 +1,6 @@
 package net.jcip.examples;
 
-import java.util.*;
+import java.util.List;
 import java.util.concurrent.*;
 
 /**
@@ -10,7 +10,7 @@ import java.util.concurrent.*;
  *
  * @author Brian Goetz and Tim Peierls
  */
-public class ConcurrentPuzzleSolver <P, M> {
+public class ConcurrentPuzzleSolver<P, M> {
     private final Puzzle<P, M> puzzle;
     private final ExecutorService exec;
     private final ConcurrentMap<P, Boolean> seen;
@@ -51,15 +51,19 @@ public class ConcurrentPuzzleSolver <P, M> {
             super(pos, move, prev);
         }
 
+        @Override
         public void run() {
             if (solution.isSet()
-                    || seen.putIfAbsent(pos, true) != null)
+                    || seen.putIfAbsent(pos, true) != null) {
                 return; // already solved or seen this position
-            if (puzzle.isGoal(pos))
+            }
+            if (puzzle.isGoal(pos)) {
                 solution.setValue(this);
-            else
-                for (M m : puzzle.legalMoves(pos))
+            } else {
+                for (M m : puzzle.legalMoves(pos)) {
                     exec.execute(newTask(puzzle.move(pos, m), m, this));
+                }
+            }
         }
     }
 }

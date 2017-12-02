@@ -25,8 +25,9 @@ public class PuzzleNode <P, M> {
 
     List<M> asMoveList() {
         List<M> solution = new LinkedList<M>();
-        for (PuzzleNode<P, M> n = this; n.move != null; n = n.prev)
+        for (PuzzleNode<P, M> n = this; n.move != null; n = n.prev) {
             solution.add(0, n.move);
+        }
         return solution;
     }
 }

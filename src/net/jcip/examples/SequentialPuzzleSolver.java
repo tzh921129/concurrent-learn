@@ -1,6 +1,8 @@
 package net.jcip.examples;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * SequentialPuzzleSolver
@@ -10,7 +12,7 @@ import java.util.*;
  * @author Brian Goetz and Tim Peierls
  */
 
-public class SequentialPuzzleSolver <P, M> {
+public class SequentialPuzzleSolver<P, M> {
     private final Puzzle<P, M> puzzle;
     private final Set<P> seen = new HashSet<P>();
 
@@ -26,14 +28,16 @@ public class SequentialPuzzleSolver <P, M> {
     private List<M> search(PuzzleNode<P, M> node) {
         if (!seen.contains(node.pos)) {
             seen.add(node.pos);
-            if (puzzle.isGoal(node.pos))
+            if (puzzle.isGoal(node.pos)) {
                 return node.asMoveList();
+            }
             for (M move : puzzle.legalMoves(node.pos)) {
                 P pos = puzzle.move(node.pos, move);
                 PuzzleNode<P, M> child = new PuzzleNode<P, M>(pos, move, node);
                 List<M> result = search(child);
-                if (result != null)
+                if (result != null) {
                     return result;
+                }
             }
         }
         return null;
