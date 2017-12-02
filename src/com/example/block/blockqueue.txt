@@ -1,0 +1,8 @@
+阻塞队列，是一种常用的并发数据结构，常用于生产者-消费者模式。
+在Java中，有很多种阻塞队列：
+ArrayBlockingQueue --最常用
+LinkedBlockingQueue --不会满的
+SynchronousQueue --size为0
+PriorityBlockingQueue
+CompletionService (BlockingQueue + Executor)
+TransferQueue (JDK 7中更快的SynchronousQueue)
