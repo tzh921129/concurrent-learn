@@ -14,24 +14,26 @@ public class TestBoundedBuffer extends TestCase {
     private static final int CAPACITY = 10000;
     private static final int THRESHOLD = 10000;
 
-    void testIsEmptyWhenConstructed() {
+    public void testIsEmptyWhenConstructed() {
         SemaphoreBoundedBuffer<Integer> bb = new SemaphoreBoundedBuffer<Integer>(10);
         assertTrue(bb.isEmpty());
         assertFalse(bb.isFull());
     }
 
-    void testIsFullAfterPuts() throws InterruptedException {
+    public void testIsFullAfterPuts() throws InterruptedException {
         SemaphoreBoundedBuffer<Integer> bb = new SemaphoreBoundedBuffer<Integer>(10);
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++) {
             bb.put(i);
+        }
         assertTrue(bb.isFull());
         assertFalse(bb.isEmpty());
     }
 
 
-    void testTakeBlocksWhenEmpty() {
+    public void testTakeBlocksWhenEmpty() {
         final SemaphoreBoundedBuffer<Integer> bb = new SemaphoreBoundedBuffer<Integer>(10);
         Thread taker = new Thread() {
+            @Override
             public void run() {
                 try {
                     int unused = bb.take();
@@ -55,13 +57,15 @@ public class TestBoundedBuffer extends TestCase {
         double[] data = new double[100000];
     }
 
-    void testLeak() throws InterruptedException {
+    public void testLeak() throws InterruptedException {
         SemaphoreBoundedBuffer<Big> bb = new SemaphoreBoundedBuffer<Big>(CAPACITY);
         int heapSize1 = snapshotHeap();
-        for (int i = 0; i < CAPACITY; i++)
+        for (int i = 0; i < CAPACITY; i++) {
             bb.put(new Big());
-        for (int i = 0; i < CAPACITY; i++)
+        }
+        for (int i = 0; i < CAPACITY; i++) {
             bb.take();
+        }
         int heapSize2 = snapshotHeap();
         assertTrue(Math.abs(heapSize1 - heapSize2) < THRESHOLD);
     }

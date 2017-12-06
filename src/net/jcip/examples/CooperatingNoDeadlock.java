@@ -1,8 +1,10 @@
 package net.jcip.examples;
 
-import java.util.*;
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 
-import net.jcip.annotations.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * CooperatingNoDeadlock
@@ -14,7 +16,8 @@ import net.jcip.annotations.*;
 class CooperatingNoDeadlock {
     @ThreadSafe
     class Taxi {
-        @GuardedBy("this") private Point location, destination;
+        @GuardedBy("this")
+        private Point location, destination;
         private final Dispatcher dispatcher;
 
         public Taxi(Dispatcher dispatcher) {
@@ -31,8 +34,9 @@ class CooperatingNoDeadlock {
                 this.location = location;
                 reachedDestination = location.equals(destination);
             }
-            if (reachedDestination)
+            if (reachedDestination) {
                 dispatcher.notifyAvailable(this);
+            }
         }
 
         public synchronized Point getDestination() {
@@ -46,8 +50,10 @@ class CooperatingNoDeadlock {
 
     @ThreadSafe
     class Dispatcher {
-        @GuardedBy("this") private final Set<Taxi> taxis;
-        @GuardedBy("this") private final Set<Taxi> availableTaxis;
+        @GuardedBy("this")
+        private final Set<Taxi> taxis;
+        @GuardedBy("this")
+        private final Set<Taxi> availableTaxis;
 
         public Dispatcher() {
             taxis = new HashSet<Taxi>();
@@ -64,8 +70,9 @@ class CooperatingNoDeadlock {
                 copy = new HashSet<Taxi>(taxis);
             }
             Image image = new Image();
-            for (Taxi t : copy)
+            for (Taxi t : copy) {
                 image.drawMarker(t.getLocation());
+            }
             return image;
         }
     }

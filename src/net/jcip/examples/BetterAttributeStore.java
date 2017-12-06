@@ -1,9 +1,11 @@
 package net.jcip.examples;
 
-import java.util.*;
-import java.util.regex.*;
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 
-import net.jcip.annotations.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * BetterAttributeStore
@@ -14,7 +16,9 @@ import net.jcip.annotations.*;
  */
 @ThreadSafe
 public class BetterAttributeStore {
-    @GuardedBy("this") private final Map<String, String>
+    @GuardedBy("this")
+    //also can use Hashtable,SynchronizedMap,ConcurrentHashMap to avoid use 'synchronized' block
+    private final Map<String, String>
             attributes = new HashMap<String, String>();
 
     public boolean userLocationMatches(String name, String regexp) {
@@ -23,9 +27,6 @@ public class BetterAttributeStore {
         synchronized (this) {
             location = attributes.get(key);
         }
-        if (location == null)
-            return false;
-        else
-            return Pattern.matches(regexp, location);
+        return location != null && Pattern.matches(regexp, location);
     }
 }

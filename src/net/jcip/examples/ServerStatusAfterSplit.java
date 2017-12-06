@@ -1,8 +1,10 @@
 package net.jcip.examples;
 
-import java.util.*;
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 
-import net.jcip.annotations.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * ServerStatusAfterSplit
@@ -13,8 +15,10 @@ import net.jcip.annotations.*;
  */
 @ThreadSafe
 public class ServerStatusAfterSplit {
-    @GuardedBy("users") public final Set<String> users;
-    @GuardedBy("queries") public final Set<String> queries;
+    @GuardedBy("users")
+    public final Set<String> users;
+    @GuardedBy("queries")
+    public final Set<String> queries;
 
     public ServerStatusAfterSplit() {
         users = new HashSet<String>();

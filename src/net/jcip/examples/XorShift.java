@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.*;
 
 /**
  * XorShift
+ * 适用于中等品质的随机数生成器
  *
  * @author Brian Goetz and Tim Peierls
  */

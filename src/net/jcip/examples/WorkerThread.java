@@ -11,12 +11,14 @@ import java.util.concurrent.*;
  */
 
 public class WorkerThread extends Thread {
+    //BlockingQueue取出的操作被阻塞的可能性小于使用同步的LinkedList的阻塞可能
     private final BlockingQueue<Runnable> queue;
 
     public WorkerThread(BlockingQueue<Runnable> queue) {
         this.queue = queue;
     }
 
+    @Override
     public void run() {
         while (true) {
             try {

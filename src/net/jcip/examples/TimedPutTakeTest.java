@@ -5,7 +5,7 @@ import java.util.concurrent.*;
 /**
  * TimedPutTakeTest
  * <p/>
- * Testing with a barrier-based timer
+ * Testing with a latch-based timer
  *
  * @author Brian Goetz and Tim Peierls
  */
@@ -17,6 +17,7 @@ public class TimedPutTakeTest extends PutTakeTest {
         barrier = new CyclicBarrier(nPairs * 2 + 1, timer);
     }
 
+    @Override
     public void test() {
         try {
             timer.clear();

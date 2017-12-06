@@ -1,6 +1,6 @@
 package net.jcip.examples;
 
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * DynamicOrderDeadlock
@@ -17,9 +17,9 @@ public class DynamicOrderDeadlock {
             throws InsufficientFundsException {
         synchronized (fromAccount) {
             synchronized (toAccount) {
-                if (fromAccount.getBalance().compareTo(amount) < 0)
+                if (fromAccount.getBalance().compareTo(amount) < 0) {
                     throw new InsufficientFundsException();
-                else {
+                } else {
                     fromAccount.debit(amount);
                     toAccount.credit(amount);
                 }
@@ -28,21 +28,25 @@ public class DynamicOrderDeadlock {
     }
 
     static class DollarAmount implements Comparable<DollarAmount> {
+
         // Needs implementation
+        private int amount;
 
         public DollarAmount(int amount) {
+            this.amount = amount;
         }
 
         public DollarAmount add(DollarAmount d) {
-            return null;
+            return new DollarAmount(d.amount + amount);
         }
 
         public DollarAmount subtract(DollarAmount d) {
-            return null;
+            return new DollarAmount(amount - d.amount);
         }
 
+        @Override
         public int compareTo(DollarAmount dollarAmount) {
-            return 0;
+            return this.amount - dollarAmount.amount;
         }
     }
 
@@ -51,8 +55,10 @@ public class DynamicOrderDeadlock {
         private final int acctNo;
         private static final AtomicInteger sequence = new AtomicInteger();
 
-        public Account() {
+
+        public Account(int initMoney) {
             acctNo = sequence.incrementAndGet();
+            balance = new DollarAmount(initMoney);
         }
 
         void debit(DollarAmount d) {
@@ -73,5 +79,17 @@ public class DynamicOrderDeadlock {
     }
 
     static class InsufficientFundsException extends Exception {
+        public InsufficientFundsException() {
+            super();
+            System.out.println("account balance is insufficient!");
+        }
+    }
+
+    public static void main(String[] args) throws InsufficientFundsException {
+        Account account1 = new Account(100);
+        Account account2 = new Account(200);
+
+        transferMoney(account1, account2, new DollarAmount(50));
+        transferMoney(account2, account1, new DollarAmount(60));
     }
 }

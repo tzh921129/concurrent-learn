@@ -1,8 +1,11 @@
 package net.jcip.examples;
 
-import java.util.*;
+import net.jcip.annotations.Immutable;
 
-import net.jcip.annotations.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * ThreeStooges
@@ -13,7 +16,7 @@ import net.jcip.annotations.*;
  * @author Brian Goetz and Tim Peierls
  */
 @Immutable
- public final class ThreeStooges {
+public final class ThreeStooges {
     private final Set<String> stooges = new HashSet<String>();
 
     public ThreeStooges() {

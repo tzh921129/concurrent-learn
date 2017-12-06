@@ -16,9 +16,9 @@ public class InduceLockOrder {
             throws InsufficientFundsException {
         class Helper {
             public void transfer() throws InsufficientFundsException {
-                if (fromAcct.getBalance().compareTo(amount) < 0)
+                if (fromAcct.getBalance().compareTo(amount) < 0) {
                     throw new InsufficientFundsException();
-                else {
+                } else {
                     fromAcct.debit(amount);
                     toAcct.credit(amount);
                 }

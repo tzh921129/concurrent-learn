@@ -1,8 +1,9 @@
 package net.jcip.examples;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.locks.*;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 /**
@@ -30,9 +31,9 @@ public class DeadlockAvoidance {
                 try {
                     if (toAcct.lock.tryLock()) {
                         try {
-                            if (fromAcct.getBalance().compareTo(amount) < 0)
+                            if (fromAcct.getBalance().compareTo(amount) < 0) {
                                 throw new InsufficientFundsException();
-                            else {
+                            } else {
                                 fromAcct.debit(amount);
                                 toAcct.credit(amount);
                                 return true;
@@ -45,8 +46,10 @@ public class DeadlockAvoidance {
                     fromAcct.lock.unlock();
                 }
             }
-            if (System.nanoTime() < stopTime)
+            if (System.nanoTime() < stopTime) {
                 return false;
+            }
+//            避免产生活锁
             NANOSECONDS.sleep(fixedDelay + rnd.nextLong() % randMod);
         }
     }
@@ -63,6 +66,7 @@ public class DeadlockAvoidance {
     }
 
     static class DollarAmount implements Comparable<DollarAmount> {
+        @Override
         public int compareTo(DollarAmount other) {
             return 0;
         }

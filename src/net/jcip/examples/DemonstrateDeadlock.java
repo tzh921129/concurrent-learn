@@ -21,10 +21,12 @@ public class DemonstrateDeadlock {
         final Random rnd = new Random();
         final Account[] accounts = new Account[NUM_ACCOUNTS];
 
-        for (int i = 0; i < accounts.length; i++)
-            accounts[i] = new Account();
+        for (int i = 0; i < accounts.length; i++) {
+            accounts[i] = new Account(200);
+        }
 
         class TransferThread extends Thread {
+            @Override
             public void run() {
                 for (int i = 0; i < NUM_ITERATIONS; i++) {
                     int fromAcct = rnd.nextInt(NUM_ACCOUNTS);
@@ -37,7 +39,8 @@ public class DemonstrateDeadlock {
                 }
             }
         }
-        for (int i = 0; i < NUM_THREADS; i++)
+        for (int i = 0; i < NUM_THREADS; i++) {
             new TransferThread().start();
+        }
     }
 }
