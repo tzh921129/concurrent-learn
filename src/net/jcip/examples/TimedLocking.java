@@ -19,8 +19,9 @@ public class TimedLocking {
             throws InterruptedException {
         long nanosToLock = unit.toNanos(timeout)
                 - estimatedNanosToSend(message);
-        if (!lock.tryLock(nanosToLock, NANOSECONDS))
+        if (!lock.tryLock(nanosToLock, NANOSECONDS)) {
             return false;
+        }
         try {
             return sendOnSharedLine(message);
         } finally {

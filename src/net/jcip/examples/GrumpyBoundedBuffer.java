@@ -1,6 +1,6 @@
 package net.jcip.examples;
 
-import net.jcip.annotations.*;
+import net.jcip.annotations.ThreadSafe;
 
 /**
  * GrumpyBoundedBuffer
@@ -10,7 +10,7 @@ import net.jcip.annotations.*;
  * @author Brian Goetz and Tim Peierls
  */
 @ThreadSafe
-        public class GrumpyBoundedBuffer <V> extends BaseBoundedBuffer<V> {
+public class GrumpyBoundedBuffer<V> extends BaseBoundedBuffer<V> {
     public GrumpyBoundedBuffer() {
         this(100);
     }
@@ -20,14 +20,16 @@ import net.jcip.annotations.*;
     }
 
     public synchronized void put(V v) throws BufferFullException {
-        if (isFull())
+        if (isFull()) {
             throw new BufferFullException();
+        }
         doPut(v);
     }
 
     public synchronized V take() throws BufferEmptyException {
-        if (isEmpty())
+        if (isEmpty()) {
             throw new BufferEmptyException();
+        }
         return doTake();
     }
 }

@@ -39,22 +39,26 @@ import net.jcip.annotations.*;
     public void setLower(int i) {
         while (true) {
             IntPair oldv = values.get();
-            if (i > oldv.upper)
+            if (i > oldv.upper) {
                 throw new IllegalArgumentException("Can't set lower to " + i + " > upper");
+            }
             IntPair newv = new IntPair(i, oldv.upper);
-            if (values.compareAndSet(oldv, newv))
+            if (values.compareAndSet(oldv, newv)) {
                 return;
+            }
         }
     }
 
     public void setUpper(int i) {
         while (true) {
             IntPair oldv = values.get();
-            if (i < oldv.lower)
+            if (i < oldv.lower) {
                 throw new IllegalArgumentException("Can't set upper to " + i + " < lower");
+            }
             IntPair newv = new IntPair(oldv.lower, i);
-            if (values.compareAndSet(oldv, newv))
+            if (values.compareAndSet(oldv, newv)) {
                 return;
+            }
         }
     }
 }

@@ -13,12 +13,14 @@ public class PossibleReordering {
 
     public static void main(String[] args) throws InterruptedException {
         Thread one = new Thread(new Runnable() {
+            @Override
             public void run() {
                 a = 1;
                 x = b;
             }
         });
         Thread other = new Thread(new Runnable() {
+            @Override
             public void run() {
                 b = 1;
                 y = a;

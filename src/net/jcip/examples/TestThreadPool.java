@@ -20,10 +20,11 @@ public class TestThreadPool extends TestCase {
 
     public void testPoolExpansion() throws InterruptedException {
         int MAX_SIZE = 10;
-        ExecutorService exec = Executors.newFixedThreadPool(MAX_SIZE);
-
+//        ExecutorService exec = Executors.newFixedThreadPool(MAX_SIZE);
+        ExecutorService exec = Executors.newFixedThreadPool(MAX_SIZE, threadFactory);
         for (int i = 0; i < 10 * MAX_SIZE; i++) {
             exec.execute(new Runnable() {
+                @Override
                 public void run() {
                     try {
                         Thread.sleep(Long.MAX_VALUE);

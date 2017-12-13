@@ -54,25 +54,25 @@ public class TestBoundedBuffer extends TestCase {
     }
 
     class Big {
-        double[] data = new double[100000];
+        double[] data = new double[10000];
     }
 
     public void testLeak() throws InterruptedException {
         SemaphoreBoundedBuffer<Big> bb = new SemaphoreBoundedBuffer<Big>(CAPACITY);
-        int heapSize1 = snapshotHeap();
+        long heapSize1 = snapshotHeap();
         for (int i = 0; i < CAPACITY; i++) {
             bb.put(new Big());
         }
         for (int i = 0; i < CAPACITY; i++) {
             bb.take();
         }
-        int heapSize2 = snapshotHeap();
+        long heapSize2 = snapshotHeap();
         assertTrue(Math.abs(heapSize1 - heapSize2) < THRESHOLD);
     }
 
-    private int snapshotHeap() {
+    private long snapshotHeap() {
         /* Snapshot heap and return heap size */
-        return 0;
+        return Runtime.getRuntime().totalMemory();
     }
 
 }

@@ -6,6 +6,10 @@ import net.jcip.annotations.ThreadSafe;
  * BoundedBuffer
  * <p/>
  * Bounded buffer using condition queues
+ * 只有同时满足下列条件后，才能用单一的Notify取代Nofifyall
+ * (1）相同的等待者，只有一个条件为此与条件队列相关，每个线程从wait返回后
+ * 执行相同的逻辑，并且;
+ * (2)一进一出，一个对条件变量的通知，至多只能激活一个线程
  *
  * @author Brian Goetz and Tim Peierls
  */
@@ -51,5 +55,17 @@ public class BoundedBuffer<V> extends BaseBoundedBuffer<V> {
         if (wasEmpty) {
             notifyAll();
         }
+    }
+
+    public synchronized V alternateTake() throws InterruptedException {
+        while (isEmpty()) {
+            wait();
+        }
+        boolean wasFull = isFull();
+        V v = doTake();
+        if (wasFull) {
+            notifyAll();
+        }
+        return v;
     }
 }

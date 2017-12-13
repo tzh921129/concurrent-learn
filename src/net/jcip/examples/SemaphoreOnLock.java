@@ -1,8 +1,11 @@
 package net.jcip.examples;
 
-import java.util.concurrent.locks.*;
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 
-import net.jcip.annotations.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * SemaphoreOnLock
@@ -32,8 +35,9 @@ public class SemaphoreOnLock {
     public void acquire() throws InterruptedException {
         lock.lock();
         try {
-            while (permits <= 0)
+            while (permits <= 0) {
                 permitsAvailable.await();
+            }
             --permits;
         } finally {
             lock.unlock();
